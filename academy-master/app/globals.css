@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, :root {
+  height: 100%;
+}
+
+@layer base {
+  :root {
+    --background: #ffffff; /* Orange */
+    --foreground: #3d2b1f; /* Dark Brown */
+
+    --card: 60 56% 91%; /* Beige */
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 60 56% 91%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: #eb4200 !important;
+    --foreground: #3d2b1f !important;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    background-color: var(--background) !important;
+    color: var(--foreground) !important;
+  }
+}
+
+.cl-formButtonPrimary {
+  color: black;
+  background-color: #ffffff5e;
+}
+
+.cl-formButtonPrimary:hover {
+  background-color: rgba(253, 171, 4, 0.8);
+}
+
+@import "@uploadthing/react/styles.css";
