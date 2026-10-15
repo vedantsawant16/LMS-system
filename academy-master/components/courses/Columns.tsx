@@ -2,63 +2,63 @@
 
 import { Course } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
-import { Pencil } from "lucide-react";
+import { Pencil, ArrowUpDown } from "lucide-react";
 import Link from "next/link";
-import { ArrowUpDown } from "lucide-react";
-
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { formatPrice } from "@/lib/formatPrice";
 
 export const columns: ColumnDef<Course>[] = [
   {
-    accessorKey: "title", // course.title
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Title
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    accessorKey: "title",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        className="px-2 font-semibold"
+      >
+        Title
+        <ArrowUpDown className="ml-2 h-3.5 w-3.5" />
+      </Button>
+    ),
+    cell: ({ row }) => (
+      <p className="font-semibold text-sm" style={{ color: "hsl(var(--foreground))" }}>
+        {row.getValue("title")}
+      </p>
+    ),
   },
   {
     accessorKey: "price",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Price
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        className="px-2 font-semibold"
+      >
+        Price
+        <ArrowUpDown className="ml-2 h-3.5 w-3.5" />
+      </Button>
+    ),
     cell: ({ row }) => {
       const price = parseFloat(row.getValue("price"));
-      const formatted = new Intl.NumberFormat("en-IN", {
-        style: "currency",
-        currency: "INR",
-      }).format(price);
-
-      return <div>{formatted}</div>;
+      return (
+        <div className="text-sm font-semibold text-gold">
+          {formatPrice(price)}
+        </div>
+      );
     },
   },
   {
     accessorKey: "isPublished",
-    header: "Status",
+    header: () => (
+      <span className="text-xs font-bold uppercase tracking-wider" style={{ color: "hsl(var(--muted-foreground))" }}>
+        Status
+      </span>
+    ),
     cell: ({ row }) => {
       const isPublished = row.getValue("isPublished") || false;
-
       return (
-        <Badge
-          className={`${
-            isPublished && "bg-[#FDAB04] text-black hover:bg-[#FDAB04]"
-          }`}
-        >
+        <Badge variant={isPublished ? "success" : "secondary"}>
           {isPublished ? "Published" : "Draft"}
         </Badge>
       );
@@ -69,9 +69,9 @@ export const columns: ColumnDef<Course>[] = [
     cell: ({ row }) => (
       <Link
         href={`/instructor/courses/${row.original.id}/basic`}
-        className="flex gap-2 items-center hover:text-[#FDAB04]"
+        className="flex gap-1.5 items-center text-xs font-semibold text-gold hover:text-gold-light transition-colors"
       >
-        <Pencil className="h-4 w-4" /> Edit
+        <Pencil className="h-3.5 w-3.5" /> Edit
       </Link>
     ),
   },

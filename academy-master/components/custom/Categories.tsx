@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
 import { Category } from "@prisma/client";
-import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { LayoutGrid } from "lucide-react";
 
 interface CategoriesProps {
   categories: Category[];
@@ -12,26 +12,34 @@ interface CategoriesProps {
 const Categories = ({ categories, selectedCategory }: CategoriesProps) => {
   const router = useRouter();
 
-  const onClick = (categoryId: string | null) => {
-    router.push(categoryId ? `/categories/${categoryId}` : "/");
-  };
+  const go = (id: string | null) => router.push(id ? `/categories/${id}` : "/");
 
   return (
-    <div className="flex flex-wrap px-4 gap-7 justify-center my-10">
-      <Button
-        variant={selectedCategory === null ? "default" : "outline"}
-        onClick={() => onClick(null)}
+    <div className="flex flex-wrap items-center gap-2 px-4 py-5 justify-center">
+      <button
+        onClick={() => go(null)}
+        className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-200 ${
+          selectedCategory === null
+            ? "category-active border-transparent"
+            : "bg-surface-3 text-warm-500 border-white/[0.08] hover:text-warm-200 hover:border-white/15 hover:bg-surface-4"
+        }`}
       >
-        All Categories
-      </Button>
-      {categories.map((category) => (
-        <Button
-          key={category.id}
-          variant={selectedCategory === category.id ? "default" : "outline"}
-          onClick={() => onClick(category.id)}
+        <LayoutGrid className="h-4 w-4" />
+        All Courses
+      </button>
+
+      {categories.map((cat) => (
+        <button
+          key={cat.id}
+          onClick={() => go(cat.id)}
+          className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-200 ${
+            selectedCategory === cat.id
+              ? "category-active border-transparent"
+              : "bg-surface-3 text-warm-500 border-white/[0.08] hover:text-warm-200 hover:border-white/15 hover:bg-surface-4"
+          }`}
         >
-          {category.name}
-        </Button>
+          {cat.name}
+        </button>
       ))}
     </div>
   );

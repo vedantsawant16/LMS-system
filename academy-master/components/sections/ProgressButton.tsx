@@ -4,9 +4,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
-
-import { Button } from "@/components/ui/button";
-import { CheckCircle, Loader2 } from "lucide-react";
+import { CheckCircle2, Circle, Loader2 } from "lucide-react";
 
 interface ProgressButtonProps {
   courseId: string;
@@ -14,43 +12,43 @@ interface ProgressButtonProps {
   isCompleted: boolean;
 }
 
-const ProgressButton = ({
-  courseId,
-  sectionId,
-  isCompleted,
-}: ProgressButtonProps) => {
+const ProgressButton = ({ courseId, sectionId, isCompleted }: ProgressButtonProps) => {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const onClick = async () => {
+  const toggle = async () => {
     try {
-      setIsLoading(true);
+      setLoading(true);
       await axios.post(`/api/courses/${courseId}/sections/${sectionId}/progress`, {
         isCompleted: !isCompleted,
       });
-      toast.success("Progress updated!");
+      toast.success(isCompleted ? "Marked incomplete" : "Section complete!");
       router.refresh();
-    } catch (err) {
-      console.log("Failed to update progress", err);
+    } catch {
       toast.error("Something went wrong!");
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   return (
-    <Button variant={isCompleted ? "complete" : "default"} onClick={onClick}>
-      {isLoading ? (
-        <Loader2 className="h-4 w-4 animate-spin" />
+    <button
+      onClick={toggle}
+      disabled={loading}
+      className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold transition-all disabled:opacity-60 ${
+        isCompleted
+          ? "bg-success/10 text-success border border-success/25 hover:bg-success/20"
+          : "bg-surface-3 text-warm-400 border border-white/[0.09] hover:bg-surface-4 hover:text-warm-200"
+      }`}
+    >
+      {loading ? (
+        <Loader2 className="h-3.5 w-3.5 animate-spin" />
       ) : isCompleted ? (
-        <div className="flex items-center">
-          <CheckCircle className="h-4 w-4 mr-2" />
-          <span>Completed</span>
-        </div>
+        <><CheckCircle2 className="h-3.5 w-3.5" /> Completed</>
       ) : (
-        "Mark as complete"
+        <><Circle className="h-3.5 w-3.5" /> Mark Complete</>
       )}
-    </Button>
+    </button>
   );
 };
 
