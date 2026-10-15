@@ -1,12 +1,7 @@
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
-import Mux from "@mux/mux-node";
-
-const { video } = new Mux({
-  tokenId: process.env.MUX_TOKEN_ID,
-  tokenSecret: process.env.MUX_TOKEN_SECRET,
-});
+import { getMuxVideo } from "@/lib/mux";
 
 export const POST = async (
   req: NextRequest,
@@ -52,7 +47,7 @@ export const POST = async (
       });
 
       if (existingMuxData) {
-        await video.assets.delete(existingMuxData.assetId);
+        await getMuxVideo().assets.delete(existingMuxData.assetId);
         await db.muxData.delete({
           where: {
             id: existingMuxData.id,
@@ -60,7 +55,7 @@ export const POST = async (
         });
       }
 
-      const asset = await video.assets.create({
+      const asset = await getMuxVideo().assets.create({
         input: values.videoUrl,
         playback_policy: ["public"],
         test: false,
@@ -124,7 +119,7 @@ export const DELETE = async (req: NextRequest,
       });
 
       if (existingMuxData) {
-        await video.assets.delete(existingMuxData.assetId);
+        await getMuxVideo().assets.delete(existingMuxData.assetId);
         await db.muxData.delete({
           where: {
             id: existingMuxData.id,
